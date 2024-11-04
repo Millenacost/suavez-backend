@@ -32,7 +32,13 @@ const userSchema: FastifySchema = {
 app.register(fastifyJwt, { secret: SECRET_KEY });
 // fastify.register(fastifyBcrypt);
 app.register(fastifyPostgres, {
-    connectionString: process.env.DATABASE_URL
+    host: process.env.DATABASE_URL,
+    database: process.env.DB,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    ssl: {
+        rejectUnauthorized: false 
+    }
 })
 
 app.post('/login', async (req:any, res:any) => {
