@@ -41,6 +41,8 @@ app.register(fastifyPostgres, {
     }
 })
 
+app.get("/", (req, res) => res.send("Fastify on Vercel"));
+
 app.post('/login', async (req:any, res:any) => {
     const { password, cpf } = req.body;
     const client = await app.pg.connect()
