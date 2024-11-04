@@ -128,3 +128,5 @@ app.listen({port:8080}, (err,address) => {
     }
     console.log("Server rodando na porta 8080")
 })
+
+export default app;
