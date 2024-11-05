@@ -124,11 +124,11 @@ const authenticateToken = async (request: any, reply:any) => {
 //     reply.send('Bem-vindo, cliente!');
 // });
 
-app.listen({port:8080}, (err,address) => {
-    if(err) {
-        console.log(err)
-    }
-    console.log("Server rodando na porta 8080")
-})
+// app.listen({port:8080}, (err,address) => {
+//     if(err) {
+//         console.log(err)
+//     }
+//     console.log("Server rodando na porta 8080")
+// })
 
 export default app;
