@@ -3,6 +3,7 @@ import { RegisterStoreController } from "../../controllers/RegisterStoreControll
 import { RegisterUserController } from "../../controllers/RegisterUserController";
 import { LoginController } from "../../controllers/LoginController";
 import { RegisterProductController } from "../../controllers/RegisterProductController";
+import { RegisterServiceController } from "../../controllers/RegisterServiceController";
 
 const storeSchema: FastifySchema = {
     body: {
@@ -64,6 +65,22 @@ const productSchema: FastifySchema = {
     },
 };
 
+const serviceSchema: FastifySchema = {
+    body: {
+        type: 'object',
+        required: ['storeId', 'name', 'description', 'price', 'serviceType', 'estimateTime'],
+        properties: {
+            storeId: { type: 'number' },
+            name: { type: 'string' },
+            description: { type: 'string' },
+            price: { type: 'number' },
+            serviceType: { type: 'string' },
+            estimateTime: {type: 'number'}
+        },
+        additionalProperties: false, // Não permite propriedades adicionais
+    },
+};
+
 
 export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
     fastify.post('/store/register', { schema:storeSchema },async (req: any, res: any) => {
@@ -80,6 +97,10 @@ export async function routes(fastify: FastifyInstance, options: FastifyPluginOpt
 
     fastify.post('/product/register',  { schema:productSchema },async (req:any, res:any) => {
         return new RegisterProductController().handle(req, res);
+    });
+
+    fastify.post('/service/register',  { schema:serviceSchema },async (req:any, res:any) => {
+        return new RegisterServiceController().handle(req, res);
     });
 
     
