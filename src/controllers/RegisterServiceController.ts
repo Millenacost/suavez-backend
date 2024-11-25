@@ -1,7 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Store } from "../models/store.model";
 import { app } from "../http/server";
-import { Product } from "../models/product.model";
 import { Service } from "../models/service.model";
 
 class RegisterServiceController {
@@ -11,7 +9,7 @@ class RegisterServiceController {
             const service: Service = req.body as Service;
     
             const query = `
-                INSERT INTO product (storeId, name, description, price, serviceType, estimateType)
+                INSERT INTO service (storeId, name, description, price, serviceType, estimateType)
                 VALUES ($1, $2, $3, $4, $5,$6)`;
     
             const values = [service.storeId, service.name, service.description, service.price, service.serviceType, service.estimateTime]    
