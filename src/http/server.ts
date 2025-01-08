@@ -12,6 +12,7 @@ app.register(fastifyJwt, { secret: process.env.SECRET_KEY || "my-secret-test" })
 
 // fastify.register(fastifyBcrypt);
 
+//rodar no vercel
 // app.register(fastifyPostgres, {
 //     host: process.env.DATABASE_URL,
 //     database: process.env.DB,
@@ -25,7 +26,7 @@ app.register(fastifyJwt, { secret: process.env.SECRET_KEY || "my-secret-test" })
 
 //rodar localmente
 app.register(fastifyPostgres, {
-    connectionString: "postgresql://suavezdb_owner:gzI9u0HAPxhM@ep-curly-sound-a5qwqvci.us-east-2.aws.neon.tech/suavezdb?sslmode=require",
+    connectionString: process.env.CONNECTION_STRING,
 })
 
 app.register(routes)
