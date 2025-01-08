@@ -15,6 +15,14 @@ class RegisterStoreController {
             if (checkResult.rows.length > 0) {
                 return res.status(409).send({ message: 'Já existe um estabelecimento cadastrado com este nome.' });
             }
+
+            // Verificando se dono já existe
+            const checkOwnerExists = 'SELECT * FROM users WHERE id = $1';
+            const checkResult2 = await client.query(checkOwnerExists, [store.ownerId]);
+
+            if (checkResult2.rows.length === 0) {
+                return res.status(400).send({ message: 'Usuário não encontrado.' });
+            }
     
             const query = `
                 INSERT INTO store (ownerId, name, description, registeringDate, lastUpDate, phone, street, number, city, state, logo, backgrounding, status)

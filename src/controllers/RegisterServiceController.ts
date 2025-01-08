@@ -7,6 +7,22 @@ class RegisterServiceController {
         const client = await app.pg.connect()
         try {
             const service: Service = req.body as Service;
+
+
+            // Verificando se servico ja existe
+            const checkServiceExists = 'SELECT * FROM service WHERE name = $1 AND storeId = $2';
+            const checkResult = await client.query(checkServiceExists, [service.name, service.storeId]);
+
+            if (checkResult.rowCount > 0) {
+                return res.status(400).send({ message: 'Servico já cadastrado.' });
+            }
+
+            const checkStoreExists = 'SELECT * FROM store WHERE id = $1';
+            const checkResult2 = await client.query(checkStoreExists, [service.storeId]);
+
+            if (checkResult2.rowCount === 0) {
+                return res.status(400).send({ message: 'Estabelecimento não encontrado.' });
+            }
     
             const query = `
                 INSERT INTO service (storeId, name, description, price, serviceType, estimateType)
