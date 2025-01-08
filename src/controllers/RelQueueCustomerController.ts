@@ -110,7 +110,7 @@ class RelQueueCustomerController {
         }
     }
 
-    async getQueuesForCustomer(req: FastifyRequest, res: FastifyReply) {
+    async getQueuesCustomer(req: FastifyRequest, res: FastifyReply) {
         const client = await app.pg.connect();
         try {
             const { userId } = req.params as { userId: string };

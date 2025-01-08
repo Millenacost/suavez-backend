@@ -2,12 +2,11 @@ import { FastifyInstance, FastifyPluginOptions, FastifySchema } from "fastify";
 import { RegisterStoreController } from "../../controllers/RegisterStoreController";
 import { RegisterUserController } from "../../controllers/RegisterUserController";
 import { LoginController } from "../../controllers/LoginController";
-import { RegisterProductController } from "../../controllers/RegisterProductController";
+import { ProductController } from "../../controllers/ProductController";
 import { RegisterServiceController } from "../../controllers/RegisterServiceController";
 import { RegisterQueueController } from "../../controllers/RegisterQueueController";
 import { queueSchema } from "../../models/queue.model";
 import { storeSchema } from "../../models/store.model";
-import { productSchema } from "../../models/product.model";
 import { serviceSchema } from "../../models/service.model";
 import { userSchema } from "../../models/user.model";
 import { RelQueueEmployeeController } from "../../controllers/RelQueueEmployeeController";
@@ -27,10 +26,6 @@ export async function routes(fastify: FastifyInstance, options: FastifyPluginOpt
 
     fastify.post('/login', async (req:any, res:any) => {
         return new LoginController().handle(req, res);
-    });
-
-    fastify.post('/product/register',  { schema:productSchema },async (req:any, res:any) => {
-        return new RegisterProductController().handle(req, res);
     });
 
     fastify.post('/service/register',  { schema:serviceSchema },async (req:any, res:any) => {
