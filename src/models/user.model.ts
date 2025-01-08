@@ -1,7 +1,8 @@
+import { profile } from "console";
 import { FastifySchema } from "fastify";
 
 export interface User {
-    id: number;                 
+    id: string;                 
     name: string;              
     lastName: string;          
     registeringDate: Date;     
@@ -16,7 +17,6 @@ export interface User {
     password: string;          
     active?: boolean;          
     profile?: string;          
-    storeId?: number;          
     isvalid?: boolean;         
 }
 
@@ -25,6 +25,7 @@ export const userSchema: FastifySchema = {
         type: 'object',
         required: ['name', 'cpf', 'email', 'password'],
         properties: {
+            id: { type: 'string', nullable: true },
             name: { type: 'string' },
             lastName: { type: 'string' },
             registeringDate: { type: 'string', nullable: true },
@@ -37,6 +38,10 @@ export const userSchema: FastifySchema = {
             number: { type: 'string', nullable: true },
             city: { type: 'string', nullable: true },
             state: { type: 'string', nullable: true },
+            isValid: { type: 'boolean', nullable: true },
+            active: { type: 'boolean', nullable: true },
+            profile: { type: 'string', nullable: true },
+
         },
         additionalProperties: false, // Não permite propriedades adicionais
     },

@@ -3,25 +3,32 @@ import fastifyJwt from '@fastify/jwt';
 // import fastifyBcrypt from 'fastify-bcrypt';
 import fastifyPostgres from '@fastify/postgres';
 import { routes } from './routes/routes';
+import { symlinkSync } from 'fs';
 
 export const app = fastify();
 
 // Middleware
 app.register(fastifyJwt, { secret: process.env.SECRET_KEY || "my-secret-test" });
+
 // fastify.register(fastifyBcrypt);
+
+// app.register(fastifyPostgres, {
+//     host: process.env.DATABASE_URL,
+//     database: process.env.DB,
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASS,
+//     ssl: {
+//         rejectUnauthorized: false 
+//     }
+// })
+
+
+//rodar localmente
 app.register(fastifyPostgres, {
-    host: process.env.DATABASE_URL,
-    database: process.env.DB,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    ssl: {
-        rejectUnauthorized: false 
-    }
+    connectionString: "postgresql://suavezdb_owner:gzI9u0HAPxhM@ep-curly-sound-a5qwqvci.us-east-2.aws.neon.tech/suavezdb?sslmode=require",
 })
 
 app.register(routes)
-
-app.get("/", (req, res) => res.send("Fastify on Vercel"));
 
 // Middleware de autenticação
 const authenticateToken = async (request: any, reply:any) => {
@@ -44,16 +51,6 @@ const authenticateToken = async (request: any, reply:any) => {
 // administradores
 // app.get('/admin', { preValidation: [authenticateToken, authorizeRoles(['admin'])] }, async (request: any, reply: any) => {
 //     reply.send('Bem-vindo, administrador!');
-// });
-
-// funcionários
-// app.get('/employee', { preValidation: [authenticateToken, authorizeRoles(['employee', 'admin'])] }, async (request: any, reply: any) => {
-//     reply.send('Bem-vindo, funcionário!');
-// });
-
-// clientes
-// app.get('/client', { preValidation: [authenticateToken, authorizeRoles(['client', 'employee', 'admin'])] }, async (request: any, reply: any) => {
-//     reply.send('Bem-vindo, cliente!');
 // });
 
 app.listen({port: 3000}, () => {

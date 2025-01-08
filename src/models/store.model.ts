@@ -1,8 +1,8 @@
 import { FastifySchema } from "fastify";
 
 export interface Store {
-    id: number;                 
-    ownerId: number;  
+    id: string;                 
+    ownerId: string;  
     name: string;
     description: string;
     registeringDate?: Date;
@@ -27,7 +27,7 @@ export const storeSchema: FastifySchema = {
         type: 'object',
         required: ['ownerId', 'name', 'description'], 
         properties: {
-            ownerId: { type: 'number' },
+            ownerId: { type: 'string' },
             name: { type: 'string' },
             description: { type: 'string' },
             registeringDate: { type: 'string', nullable: true },

@@ -4,6 +4,11 @@ import { app } from "../http/server";
 class LoginController {
     async handle(req: FastifyRequest, res: FastifyReply){
         const { password, cpf } = req.body as {password:string, cpf: string};
+
+        if(!password || !cpf){
+            return res.status(400).send({ message: 'CPF e senha são obrigatórios!' });
+        }
+
         const client = await app.pg.connect()
         try {
             const { rows } = await client.query(

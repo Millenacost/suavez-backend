@@ -1,8 +1,8 @@
 import { FastifySchema } from "fastify";
 
 export interface Queue {
-    id: number;                 
-    storeId: number;  
+    id: string;                 
+    storeId: string;  
     name: string;
     description: string;
     registeringDate?: Date;
@@ -23,7 +23,7 @@ export const queueSchema: FastifySchema = {
         type: 'object',
         required: ['storeId', 'name', 'description', 'status'],
         properties: {
-            storeId: { type: 'number' },
+            storeId: { type: 'string' },
             name: { type: 'string' },
             description: { type: 'string' },
             status: { type: 'string' },
