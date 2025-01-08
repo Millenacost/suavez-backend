@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { Store } from "../models/store.model";
+import { StatusStoreEnum, Store } from "../models/store.model";
 import { app } from "../http/server";
 
 class RegisterStoreController {
@@ -21,7 +21,7 @@ class RegisterStoreController {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`;
     
             const values = [store.ownerId, store.name, store.description, store.registeringDate, store.lastUpDate, store.phone, 
-                store.street, store.number, store.city, store.state, store.logo, store.backgrounding, store.status]    
+                store.street, store.number, store.city, store.state, store.logo, store.backgrounding, StatusStoreEnum.Open]    
     
             const result = await client.query(query, values);
             res.status(201).send({ message: 'Estabelecimento cadastrado com sucesso!', store: result.rows[0] });

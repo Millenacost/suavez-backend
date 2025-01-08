@@ -1,3 +1,5 @@
+import { FastifySchema } from "fastify";
+
 export interface Store {
     id: number;                 
     ownerId: number;  
@@ -12,5 +14,33 @@ export interface Store {
     state?: string;            
     logo?: string;
     backgrounding?: string;
-    status?: string;             
+    status?: StatusStoreEnum;             
 }
+
+export enum StatusStoreEnum {
+    Open = 'open',
+    Closed = 'closed'
+}
+
+export const storeSchema: FastifySchema = {
+    body: {
+        type: 'object',
+        required: ['ownerId', 'name', 'description'], 
+        properties: {
+            ownerId: { type: 'number' },
+            name: { type: 'string' },
+            description: { type: 'string' },
+            registeringDate: { type: 'string', nullable: true },
+            lastUpDate: { type: 'string', nullable: true },
+            phone: { type: 'string', nullable: true },
+            street: { type: 'string', nullable: true },
+            number: { type: 'string', nullable: true },
+            city: { type: 'string', nullable: true },
+            state: { type: 'string', nullable: true },
+            logo: { type: 'string', nullable: true },
+            backgrounding: { type: 'string', nullable: true },
+            status: { type: 'string', nullable: true },
+        },
+        additionalProperties: false,
+    },
+};
