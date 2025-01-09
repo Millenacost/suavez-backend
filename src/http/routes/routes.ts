@@ -2,9 +2,7 @@ import { FastifyInstance, FastifyPluginOptions, FastifySchema } from "fastify";
 import { RegisterStoreController } from "../../controllers/RegisterStoreController";
 import { RegisterUserController } from "../../controllers/RegisterUserController";
 import { LoginController } from "../../controllers/LoginController";
-import { RegisterServiceController } from "../../controllers/RegisterServiceController";
 import { storeSchema } from "../../models/store.model";
-import { serviceSchema } from "../../models/service.model";
 import { userSchema } from "../../models/user.model";
 import { RelQueueEmployeeController } from "../../controllers/RelQueueEmployeeController";
 import { relQueueEmployeeSchema } from "../../models/rel-queue-employee.model";
@@ -23,10 +21,6 @@ export async function routes(fastify: FastifyInstance, options: FastifyPluginOpt
 
     fastify.post('/login', async (req:any, res:any) => {
         return new LoginController().handle(req, res);
-    });
-
-    fastify.post('/service/register',  { schema:serviceSchema },async (req:any, res:any) => {
-        return new RegisterServiceController().handle(req, res);
     });
 
     fastify.post('/relQueueEmployee/register',  { schema:relQueueEmployeeSchema },async (req:any, res:any) => {
