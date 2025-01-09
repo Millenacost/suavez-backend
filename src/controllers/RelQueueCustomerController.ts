@@ -85,7 +85,7 @@ class RelQueueCustomerController {
     async removeCustomerFromQueue(req: FastifyRequest, res: FastifyReply) {
         const client = await app.pg.connect();
         try {
-            const { queueId, userId } = req.body as { queueId: number, userId: number };
+            const { queueId, userId } = req.params as { queueId: number, userId: number };
 
             if (!queueId || !userId) {
                 return res.status(400).send({ message: 'Fila ou cliente não foi informado.' });
@@ -145,15 +145,16 @@ class RelQueueCustomerController {
     async updateCustomerInQueue(req: FastifyRequest, res: FastifyReply) {
         const client = await app.pg.connect();
         try {
-            const { queueId, userId, entryDateQueue, exitDateQueue, initAttendDate, exitAttendDate, status } = req.body as RelQueueCustomer;
+            const relQueueCustomer: RelQueueCustomer = req.body as RelQueueCustomer;
 
-            if (!queueId || !userId) {
+            if(!relQueueCustomer.queueId || !relQueueCustomer.userId) {
                 return res.status(400).send({ message: 'Fila ou cliente não foi informado.' });
             }
 
             // Verificar se o registro existe na tabela rel_queue_customer
             const checkQuery = 'SELECT * FROM rel_queue_customer WHERE userId = $1 AND queueId = $2';
-            const checkResult = await client.query(checkQuery, [userId, queueId]);
+            const checkResult = await client.query(checkQuery, [relQueueCustomer.userId, relQueueCustomer.queueId]);
+            
             if (checkResult.rows.length === 0) {
                 return res.status(404).send({ message: 'Registro não encontrado.' });
             }
@@ -162,44 +163,44 @@ class RelQueueCustomerController {
             const values: any[] = [];
             let index = 0;
 
-            if (queueId !== null && queueId !== undefined) {
+            if (relQueueCustomer.queueId !== null && relQueueCustomer.queueId !== undefined) {
                 fields.push(`queueId = $${index++}`);
-                values.push(queueId);
+                values.push(relQueueCustomer.queueId);
             }
-            if (userId !== null && userId !== undefined) {
+            if (relQueueCustomer.userId !== null && relQueueCustomer.userId !== undefined) {
                 fields.push(`userId = $${index++}`);
-                values.push(userId);
+                values.push(relQueueCustomer.userId);
             }
-            if (entryDateQueue !== null && entryDateQueue !== undefined) {
+            if (relQueueCustomer.entryDateQueue !== null && relQueueCustomer.entryDateQueue !== undefined) {
                 fields.push(`entryDateQueue = $${index++}`);
-                values.push(entryDateQueue);
+                values.push(relQueueCustomer.entryDateQueue);
             }
-            if (exitDateQueue !== null && exitDateQueue !== undefined) {
+            if (relQueueCustomer.exitDateQueue !== null && relQueueCustomer.exitDateQueue !== undefined) {
                 fields.push(`exitDateQueue = $${index++}`);
-                values.push(exitDateQueue);
+                values.push(relQueueCustomer.exitDateQueue);
             }
-            if (initAttendDate !== null && initAttendDate !== undefined) {
+            if (relQueueCustomer.initAttendDate !== null && relQueueCustomer.initAttendDate !== undefined) {
                 fields.push(`initAttendDate = $${index++}`);
-                values.push(initAttendDate);
+                values.push(relQueueCustomer.initAttendDate);
             }
-            if (exitAttendDate !== null && exitAttendDate !== undefined) {
+            if (relQueueCustomer.exitAttendDate !== null && relQueueCustomer.exitAttendDate !== undefined) {
                 fields.push(`exitAttendDate = $${index++}`);
-                values.push(exitAttendDate);
+                values.push(relQueueCustomer.exitAttendDate);
             }
-            if (status !== null && status !== undefined) {
+            if (relQueueCustomer.status !== null && relQueueCustomer.status !== undefined) {
                 fields.push(`status = $${index++}`);
-                values.push(status);
+                values.push(relQueueCustomer.status);
             }
 
             if (fields.length === 0) {
                 return res.status(400).send({ message: 'Nenhum campo para atualizar.' });
             }
 
-            values.push(queueId, userId);
+            values.push(relQueueCustomer.queueId, relQueueCustomer.userId);
             const updateQuery = `
                 UPDATE rel_queue_customer
                 SET ${fields.join(', ')}
-                WHERE queueid = $${index++} AND userId = $${index++}
+                WHERE queueId = $${index++} AND userId = $${index++}
                 RETURNING *`;
 
             const result = await client.query(updateQuery, values);
