@@ -65,7 +65,6 @@ class QueueController {
     async update(req: FastifyRequest, res: FastifyReply) {
         const client = await app.pg.connect();
         try {
-            const { storeId, queueId } = req.params as { storeId: string, queueId: string };
             const queue: Queue = req.body as Queue;
 
             const fields: string[] = [];
@@ -93,7 +92,7 @@ class QueueController {
             fields.push(`lastUpDate = $${index++}`);
             values.push(new Date().toISOString());
 
-            values.push(queueId, storeId);
+            values.push(queue.id, queue.storeId);
             const updateQuery = `
                 UPDATE queue
                 SET ${fields.join(', ')}

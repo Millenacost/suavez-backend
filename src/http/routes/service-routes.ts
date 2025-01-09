@@ -9,7 +9,7 @@ export async function serviceRoutes(fastify: FastifyInstance) {
         return serviceController.register(req, res);
     });
 
-    fastify.delete('/service/delete', async (req: any, res: any) => {
+    fastify.delete('/service/:serviceId/:storeId', async (req: any, res: any) => {
         return serviceController.delete(req, res);
     });
 
@@ -17,11 +17,11 @@ export async function serviceRoutes(fastify: FastifyInstance) {
         return serviceController.update(req, res);
     });
 
-    fastify.get('/service/getAllByStore', async (req: any, res: any) => {
+    fastify.get('/service/getAllByStore/:storeId', async (req: any, res: any) => {
         return serviceController.getAll(req, res);
     });
 
-    fastify.get('/service/getByNameByStore', async (req: any, res: any) => {
+    fastify.get('/service/getByNameByStore/:storeId/:name', async (req: any, res: any) => {
         return serviceController.getByName(req, res);
     });
 }

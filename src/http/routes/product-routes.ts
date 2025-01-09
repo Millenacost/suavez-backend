@@ -9,7 +9,7 @@ export async function productRoutes(fastify: FastifyInstance) {
         return productController.register(req, res);
     });
 
-    fastify.delete('/product/delete', async (req: any, res: any) => {
+    fastify.delete('/product/:productId/:storeId', async (req: any, res: any) => {
         return productController.delete(req, res);
     });
 
@@ -17,11 +17,11 @@ export async function productRoutes(fastify: FastifyInstance) {
         return productController.update(req, res);
     });
 
-    fastify.get('/product/getAllByStore', async (req: any, res: any) => {
+    fastify.get('/product/getAllByStore/:storeId', async (req: any, res: any) => {
         return productController.getAll(req, res);
     });
 
-    fastify.get('/product/getByNameByStore', async (req: any, res: any) => {
+    fastify.get('/product/getByNameByStore/:storeId/:name', async (req: any, res: any) => {
         return productController.getByName(req, res);
     });
 }

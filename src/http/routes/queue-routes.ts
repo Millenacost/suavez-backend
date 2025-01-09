@@ -9,7 +9,7 @@ export async function queueRoutes(fastify: FastifyInstance) {
         return queueController.register(req, res);
     });
 
-    fastify.delete('/queue/delete', async (req: any, res: any) => {
+    fastify.delete('/queue/:queueId/:storeId', async (req: any, res: any) => {
         return queueController.delete(req, res);
     });
 
@@ -17,7 +17,7 @@ export async function queueRoutes(fastify: FastifyInstance) {
         return queueController.update(req, res);
     });
 
-    fastify.get('/queue/getByName', async (req: any, res: any) => {
+    fastify.get('/queue/getByName/:storeId/:name', async (req: any, res: any) => {
         return queueController.getByNameByStore(req, res);
     });
 
