@@ -3,7 +3,6 @@ import fastifyJwt from '@fastify/jwt';
 // import fastifyBcrypt from 'fastify-bcrypt';
 import fastifyPostgres from '@fastify/postgres';
 import { routes } from './routes/routes';
-import { symlinkSync } from 'fs';
 
 export const app = fastify();
 
