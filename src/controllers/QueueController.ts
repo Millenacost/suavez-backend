@@ -122,8 +122,8 @@ class QueueController {
                 return res.status(400).send({ message: 'Estabelecimento ou nome da fila não foi informado.' });
             }
 
-            const query = 'SELECT * FROM queue WHERE storeId = $1 AND name = $2';
-            const result = await client.query(query, [storeId, name]);
+            const query = 'SELECT * FROM queue WHERE storeId = $1 AND name ILIKE $2';
+            const result = await client.query(query, [storeId, `%${name}%`]);
 
             if (result.rowCount === 0) {
                 return res.status(404).send({ message: 'Fila não encontrada.' });
@@ -137,6 +137,29 @@ class QueueController {
         }
     }
 
+    async getAvailableQueues(req: FastifyRequest, res: FastifyReply) {
+        const client = await app.pg.connect();
+        try {
+            const { storeId } = req.params as { storeId: string };
+
+            if (!storeId) {
+                return res.status(400).send({ message: 'Estabelecimento não informado.' });
+            }
+
+            const query = 'SELECT * FROM queue WHERE storeId = $1 AND status != $2';
+            const result = await client.query(query, [storeId, StatusQueueEnum.Closed]);
+
+            if (result.rowCount === 0) {
+                return res.status(404).send({ message: 'Nenhuma fila disponível encontrada.' });
+            }
+
+            res.status(200).send(result.rows);
+        } catch (error: any) {
+            res.status(500).send({ message: 'Erro ao buscar filas disponíveis.', error: error.message });
+        } finally {
+            client.release();
+        }
+    }
 
 
 }

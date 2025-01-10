@@ -66,13 +66,14 @@ class RelQueueCustomerController {
                 return res.status(404).send({ message: 'Fila não encontrada.' });
             }
 
-            // Buscar todos os clientes na fila
+            // Buscar todos os clientes na fila com status WAITING, ordenados por entryDate
             const query = `
-                SELECT users.*
-                FROM rel_queue_customer
-                JOIN users ON rel_queue_customer.customerId = users.id
-                WHERE rel_queue_customer.queueId = $1`;
-            const result = await client.query(query, [queueId]);
+            SELECT users.*, rel_queue_customer.entryDate
+            FROM rel_queue_customer
+            JOIN users ON rel_queue_customer.userId = users.id
+            WHERE rel_queue_customer.queueId = $1 AND rel_queue_customer.status = $2
+            ORDER BY rel_queue_customer.entryDate ASC`;
+            const result = await client.query(query, [queueId, 'WAITING']);
 
             res.status(200).send(result.rows);
         } catch (error: any) {

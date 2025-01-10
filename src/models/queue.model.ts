@@ -1,4 +1,5 @@
 import { FastifySchema } from "fastify";
+import { Service } from "./service.model";
 
 export interface Queue {
     id: string;                 
@@ -8,6 +9,8 @@ export interface Queue {
     registeringDate?: Date;
     lastUpDate?: Date;
     status?: StatusQueueEnum;
+    employeeId?: string;
+    services: string[];
 }
 
 export enum StatusQueueEnum {
@@ -28,7 +31,9 @@ export const queueSchema: FastifySchema = {
             description: { type: 'string' },
             status: { type: 'string' },
             registeringDate: { type: 'string' },
-            lastUpDate: {type: 'string'}
+            lastUpDate: {type: 'string'},
+            employeeId: {type: 'string'},
+            services: { type: 'array', items: { type: 'string' } },
         },
         additionalProperties: false, // Não permite propriedades adicionais
     },

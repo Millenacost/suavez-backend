@@ -166,8 +166,8 @@ class StoreController {
                 return res.status(400).send({ message: 'Nome do estabelecimento não informado.' });
             }
 
-            const query = 'SELECT * FROM store WHERE name = $1';
-            const result = await client.query(query, [name]);
+            const query = 'SELECT * FROM store WHERE name ILIKE $1';
+            const result = await client.query(query, [`%${name}%`]);
 
             if (result.rowCount === 0) {
                 return res.status(404).send({ message: 'Estabelecimento não encontrado.' });
