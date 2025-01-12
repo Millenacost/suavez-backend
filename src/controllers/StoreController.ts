@@ -194,10 +194,10 @@ class StoreController {
             const result = await client.query(query, [ownerId]);
 
             if (result.rowCount === 0) {
-                return res.status(404).send({ message: 'Nenhum estabelecimento encontrado para este dono.' });
+                return res.status(200).send({ rows: result.rows, message: 'Nenhum estabelecimento encontrado para este dono.' });
             }
 
-            res.status(200).send(result.rows);
+            res.status(200).send({rows: result.rows});
         } catch (error: any) {
             res.status(500).send({ message: 'Erro ao buscar estabelecimentos.', error: error.message });
         } finally {

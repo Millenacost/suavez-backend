@@ -2,12 +2,19 @@ import fastify, { FastifySchema } from 'fastify';
 import fastifyJwt from '@fastify/jwt';
 // import fastifyBcrypt from 'fastify-bcrypt';
 import fastifyPostgres from '@fastify/postgres';
+import cors from '@fastify/cors';
 import { routes } from './routes/routes';
+import { LoginController } from '../controllers/LoginController';
+import dotenv from 'dotenv';
 
+dotenv.config();
 export const app = fastify();
 
 // Middleware
 app.register(fastifyJwt, { secret: process.env.SECRET_KEY || "my-secret-test" });
+
+// CORS
+app.register(cors, { origin: '*', credentials: true, })
 
 // fastify.register(fastifyBcrypt);
 
@@ -26,7 +33,19 @@ app.register(fastifyJwt, { secret: process.env.SECRET_KEY || "my-secret-test" })
 //rodar localmente
 app.register(fastifyPostgres, {
     connectionString: process.env.CONNECTION_STRING,
+    ssl: {
+        rejectUnauthorized: false 
+    }
 })
+
+
+app.get("/", async (req:any, res:any) => {
+    console.log("oi")
+    return res.send("Fastify on Vercel")});
+
+app.post('/login', async (req:any, res:any) => {
+    return new LoginController().handle(req, res);
+});
 
 app.register(routes)
 
@@ -61,3 +80,5 @@ export default async function handler(req: any, res: any) {
     await app.ready()
     app.server.emit('request', req, res)
 }
+
+
