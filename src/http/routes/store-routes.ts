@@ -25,10 +25,14 @@ export async function storeRoutes(fastify: FastifyInstance) {
         return storeController.getAllWithServicesAndSmallestQueue(req, res);
     });
 
+    fastify.get('/store/getAllWithSmallestQueueByName/:name', async (req: any, res: any) => {
+        return storeController.getAllWithServicesAndSmallestQueueByName(req, res);
+    });
+
     fastify.get('/store/name/:name', async (req: any, res: any) => {
         return storeController.getByName(req, res);
     });
-
+    
     fastify.get('/store/owner/:ownerId', async (req: any, res: any) => {
         return storeController.getByOwner(req, res);
     });
