@@ -157,6 +157,55 @@ class StoreController {
         }
     }
 
+    async getAllWithServices(req: FastifyRequest, res: FastifyReply) {
+        const client = await app.pg.connect();
+        try {
+            const query = `
+            SELECT store.*, 
+                   COALESCE(json_agg(service.*) FILTER (WHERE service.id IS NOT NULL), '[]') AS services
+            FROM store
+            LEFT JOIN service ON store.id = service.storeId
+            GROUP BY store.id`;
+
+            const result = await client.query(query);
+
+            res.status(200).send(result.rows);
+        } catch (error: any) {
+            res.status(500).send({ message: 'Erro ao buscar estabelecimentos com serviços.', error: error.message });
+        } finally {
+            client.release();
+        }
+    }
+
+    async getAllWithServicesAndSmallestQueue(req: FastifyRequest, res: FastifyReply) {
+        const client = await app.pg.connect();
+        try {
+            const query = `
+                SELECT store.*, 
+                       COALESCE(json_agg(service.*) FILTER (WHERE service.id IS NOT NULL), '[]') AS services,
+                       (
+                           SELECT json_build_object('id', q.id, 'name', q.name, 'customer_count', COUNT(rqc.userId))
+                           FROM queue q
+                           LEFT JOIN rel_queue_customer rqc ON q.id = rqc.queueId
+                           WHERE q.storeId = store.id
+                           GROUP BY q.id
+                           ORDER BY COUNT(rqc.userId) ASC
+                           LIMIT 1
+                       ) AS smallest_queue
+                FROM store
+                LEFT JOIN service ON store.id = service.storeId
+                GROUP BY store.id
+            `;
+            const result = await client.query(query);
+
+            res.status(200).send(result.rows);
+        } catch (error: any) {
+            res.status(500).send({ message: 'Erro ao buscar estabelecimentos com serviços.', error: error.message });
+        } finally {
+            client.release();
+        }
+    }
+
     async getByName(req: FastifyRequest, res: FastifyReply) {
         const client = await app.pg.connect();
         try {

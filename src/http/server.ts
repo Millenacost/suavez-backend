@@ -40,7 +40,6 @@ app.register(fastifyPostgres, {
 
 
 app.get("/", async (req:any, res:any) => {
-    console.log("oi")
     return res.send("Fastify on Vercel")});
 
 app.post('/login', async (req:any, res:any) => {

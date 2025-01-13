@@ -18,7 +18,11 @@ export async function storeRoutes(fastify: FastifyInstance) {
     });
 
     fastify.get('/store/getAll', async (req: any, res: any) => {
-        return storeController.getAll(req, res);
+        return storeController.getAllWithServices(req, res);
+    });
+
+    fastify.get('/store/getAllWithSmallestQueue', async (req: any, res: any) => {
+        return storeController.getAllWithServicesAndSmallestQueue(req, res);
     });
 
     fastify.get('/store/name/:name', async (req: any, res: any) => {
