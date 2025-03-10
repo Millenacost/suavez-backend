@@ -13,11 +13,9 @@ class StoreController {
 			const checkResult = await client.query(checkStoreExists, [store.name]);
 
 			if (checkResult.rows.length > 0) {
-				return res
-					.status(409)
-					.send({
-						message: "Já existe um estabelecimento cadastrado com este nome.",
-					});
+				return res.status(409).send({
+					message: "Já existe um estabelecimento cadastrado com este nome.",
+				});
 			}
 
 			// Verificando se dono já existe
@@ -51,19 +49,15 @@ class StoreController {
 			];
 
 			const result = await client.query(query, values);
-			res
-				.status(201)
-				.send({
-					message: "Estabelecimento cadastrado com sucesso!",
-					store: result.rows[0],
-				});
+			res.status(201).send({
+				message: "Estabelecimento cadastrado com sucesso!",
+				store: result.rows[0],
+			});
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao cadastrar estabelecimento.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao cadastrar estabelecimento.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -89,19 +83,15 @@ class StoreController {
 					.send({ message: "Estabelecimento não encontrado." });
 			}
 
-			res
-				.status(200)
-				.send({
-					message: "Estabelecimento deletado com sucesso!",
-					store: result.rows[0],
-				});
+			res.status(200).send({
+				message: "Estabelecimento deletado com sucesso!",
+				store: result.rows[0],
+			});
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao deletar estabelecimento.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao deletar estabelecimento.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -182,19 +172,15 @@ class StoreController {
 					.send({ message: "Estabelecimento não encontrado." });
 			}
 
-			res
-				.status(200)
-				.send({
-					message: "Estabelecimento atualizado com sucesso!",
-					store: result.rows[0],
-				});
+			res.status(200).send({
+				message: "Estabelecimento atualizado com sucesso!",
+				store: result.rows[0],
+			});
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao atualizar estabelecimento.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao atualizar estabelecimento.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -208,12 +194,10 @@ class StoreController {
 
 			res.status(200).send(result.rows);
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao buscar estabelecimentos.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao buscar estabelecimentos.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -226,19 +210,17 @@ class StoreController {
             SELECT store.*, 
                    COALESCE(json_agg(service.*) FILTER (WHERE service.id IS NOT NULL), '[]') AS services
             FROM store
-            LEFT JOIN service ON store.id = service."storeId"
+            LEFT JOIN service ON store.id = service.storeId
             GROUP BY store.id`;
 
 			const result = await client.query(query);
 
 			res.status(200).send(result.rows);
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao buscar estabelecimentos com serviços.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao buscar estabelecimentos com serviços.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -256,26 +238,24 @@ class StoreController {
                        (
                            SELECT json_build_object('id', q.id, 'name', q.name, 'customer_count', COUNT(rqc.userId))
                            FROM queue q
-                           LEFT JOIN rel_queue_customer rqc ON q.id = rqc."queueId"
+                           LEFT JOIN rel_queue_customer rqc ON q.id = rqc.queueId
                            WHERE q."storeId" = store.id
                            GROUP BY q.id
                            ORDER BY COUNT(rqc.userId) ASC
                            LIMIT 1
                        ) AS smallest_queue
                 FROM store
-                LEFT JOIN service ON store.id = service."storeId"
+                LEFT JOIN service ON store.id = service.storeId
                 GROUP BY store.id
             `;
 			const result = await client.query(query);
 
 			res.status(200).send(result.rows);
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao buscar estabelecimentos com serviços.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao buscar estabelecimentos com serviços.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -301,14 +281,14 @@ class StoreController {
                        (
                            SELECT json_build_object('id', q.id, 'name', q.name, 'customer_count', COUNT(rqc.userId))
                            FROM queue q
-                           LEFT JOIN rel_queue_customer rqc ON q.id = rqc."queueId"
+                           LEFT JOIN rel_queue_customer rqc ON q.id = rqc.queueId
                            WHERE q."storeId" = store.id
                            GROUP BY q.id
                            ORDER BY COUNT(rqc.userId) ASC
                            LIMIT 1
                        ) AS smallest_queue
                 FROM store
-                LEFT JOIN service ON store.id = service."storeId"
+                LEFT JOIN service ON store.id = service.storeId
                 WHERE store.name ILIKE $1
                 GROUP BY store.id
             `;
@@ -316,12 +296,10 @@ class StoreController {
 
 			res.status(200).send(result.rows);
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao buscar estabelecimentos com serviços.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao buscar estabelecimentos com serviços.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -349,12 +327,10 @@ class StoreController {
 
 			res.status(200).send(result.rows[0]);
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao buscar estabelecimento.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao buscar estabelecimento.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
@@ -373,22 +349,18 @@ class StoreController {
 			const result = await client.query(query, [ownerId]);
 
 			if (result.rowCount === 0) {
-				return res
-					.status(200)
-					.send({
-						rows: result.rows,
-						message: "Nenhum estabelecimento encontrado para este dono.",
-					});
+				return res.status(200).send({
+					rows: result.rows,
+					message: "Nenhum estabelecimento encontrado para este dono.",
+				});
 			}
 
 			res.status(200).send({ rows: result.rows });
 		} catch (error: any) {
-			res
-				.status(500)
-				.send({
-					message: "Erro ao buscar estabelecimentos.",
-					error: error.message,
-				});
+			res.status(500).send({
+				message: "Erro ao buscar estabelecimentos.",
+				error: error.message,
+			});
 		} finally {
 			client.release();
 		}
