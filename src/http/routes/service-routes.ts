@@ -24,4 +24,8 @@ export async function serviceRoutes(fastify: FastifyInstance) {
     fastify.get('/service/getByNameByStore/:storeId/:name', async (req: any, res: any) => {
         return serviceController.getByName(req, res);
     });
+
+    fastify.get('/service/getByStoreByService/:storeId/:serviceId', async (req: any, res: any) => {
+        return serviceController.getByStoreByService(req, res);
+    });
 }

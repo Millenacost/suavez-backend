@@ -161,6 +161,41 @@ class QueueController {
         }
     }
 
+    async getQueuesAvaiblesAndEmployee(req: FastifyRequest, res: FastifyReply) {
+        const client = await app.pg.connect();
+        try {
+            const { storeId } = req.params as { storeId: string };
+
+            if (!storeId) {
+                return res.status(400).send({ message: 'ID do estabelecimento não informado.' });
+            }
+
+            const query = `
+                SELECT queue.*, 
+                       CONCAT(users.name, ' ', users.lastName) AS employee_name,
+                       COUNT(rqc.userId) AS customer_count
+                FROM queue
+                LEFT JOIN users ON queue.employeeId = users.id
+                LEFT JOIN rel_queue_customer rqc ON queue.id = rqc.queueId
+                WHERE queue."storeId" = $1 AND queue.status != $2
+                GROUP BY queue.id, users.name, users.lastName
+            `;
+            const result = await client.query(query, [storeId, StatusQueueEnum.Closed]);
+
+            if (result.rowCount === 0) {
+                return res.status(404).send({ message: 'Nenhuma fila disponível encontrada para este estabelecimento.' });
+            }
+
+            res.status(200).send(result.rows);
+        } catch (error: any) {
+            res.status(500).send({ message: 'Erro ao buscar filas.', error: error.message });
+        } finally {
+            client.release();
+        }
+    }
+
+
+
 
 }
 

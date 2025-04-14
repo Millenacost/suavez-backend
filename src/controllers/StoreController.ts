@@ -187,7 +187,7 @@ class StoreController {
                            SELECT json_build_object('id', q.id, 'name', q.name, 'customer_count', COUNT(rqc.userId))
                            FROM queue q
                            LEFT JOIN rel_queue_customer rqc ON q.id = rqc.queueId
-                           WHERE q.storeId = store.id
+                           WHERE q."storeId" = store.id
                            GROUP BY q.id
                            ORDER BY COUNT(rqc.userId) ASC
                            LIMIT 1

@@ -3,6 +3,7 @@ import { app } from "../http/server";
 import { Service } from "../models/service.model";
 
 class ServiceController {
+
     async register(req: FastifyRequest, res: FastifyReply){
         const client = await app.pg.connect()
         try {
@@ -148,6 +149,30 @@ class ServiceController {
 
             const query = 'SELECT * FROM service WHERE storeId = $1 AND name = $2';
             const result = await client.query(query, [storeId, name]);
+
+            if (result.rowCount === 0) {
+                return res.status(404).send({ message: 'Serviço não encontrado.' });
+            }
+
+            res.status(200).send(result.rows[0]);
+        } catch (error: any) {
+            res.status(500).send({ message: 'Erro ao buscar serviço.', error: error.message });
+        } finally {
+            client.release();
+        }
+    }
+
+    async getByStoreByService(req: FastifyRequest, res: FastifyReply) {
+        const client = await app.pg.connect();
+        try {
+            const { storeId, serviceId } = req.params as { storeId: string, serviceId: string };
+
+            if(!storeId || !serviceId) {
+                return res.status(400).send({ message: 'Estabelecimento ou serviço não foi informado.' });
+            }
+
+            const query = 'SELECT * FROM service WHERE storeId = $1 AND id = $2';
+            const result = await client.query(query, [storeId, serviceId]);
 
             if (result.rowCount === 0) {
                 return res.status(404).send({ message: 'Serviço não encontrado.' });

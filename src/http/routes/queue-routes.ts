@@ -26,4 +26,7 @@ export async function queueRoutes(fastify: FastifyInstance) {
     });
 
 
+    fastify.get('/queues/store/:storeId', async (req: any, res: any) => {
+        return queueController.getQueuesAvaiblesAndEmployee(req, res);
+    });
 }
