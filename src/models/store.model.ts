@@ -12,7 +12,7 @@ export interface Store {
     number?: string;           
     city?: string;            
     state?: string;            
-    logo?: string;
+    logoPath?: string;
     backgrounding?: string;
     status?: StatusStoreEnum;             
 }
@@ -37,7 +37,7 @@ export const storeSchema: FastifySchema = {
             number: { type: 'string', nullable: true },
             city: { type: 'string', nullable: true },
             state: { type: 'string', nullable: true },
-            logo: { type: 'string', nullable: true },
+            logoPath: { type: 'string', nullable: true },
             backgrounding: { type: 'string', nullable: true },
             status: { type: 'string', nullable: true },
         },

@@ -29,7 +29,7 @@ class StoreController {
 			}
 
 			const query = `
-                INSERT INTO store (ownerId, name, description, registeringDate, lastUpDate, phone, street, number, city, state, logo, backgrounding, status)
+                INSERT INTO store (ownerId, name, description, registeringDate, lastUpDate, phone, street, number, city, state, logoPath, backgrounding, status)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`;
 
 			const values = [
@@ -43,7 +43,7 @@ class StoreController {
 				store.number,
 				store.city,
 				store.state,
-				store.logo,
+				store.logoPath,
 				store.backgrounding,
 				StatusStoreEnum.Open,
 			];
@@ -134,9 +134,9 @@ class StoreController {
 				fields.push(`state = $${index++}`);
 				values.push(store.state);
 			}
-			if (store.logo !== null && store.logo !== undefined) {
-				fields.push(`logo = $${index++}`);
-				values.push(store.logo);
+			if (store.logoPath !== null && store.logoPath !== undefined) {
+				fields.push(`logoPath = $${index++}`);
+				values.push(store.logoPath);
 			}
 			if (store.backgrounding !== null && store.backgrounding !== undefined) {
 				fields.push(`backgrounding = $${index++}`);
@@ -243,18 +243,19 @@ class StoreController {
                            GROUP BY q.id
                            ORDER BY COUNT(rqc.userId) ASC
                            LIMIT 1
-                       ) AS smallest_queue
+                       ) AS "minorQueue"
                 FROM store
                 LEFT JOIN service ON store.id = service.storeId
                 GROUP BY store.id
             `;
 			const result = await client.query(query);
 
-			res.status(200).send(result.rows);
+			res.status(200).send({valid: true, data:result.rows});
 		} catch (error: any) {
+			console.error("Erro ao buscar estabelecimentos.", error.message);
 			res.status(500).send({
-				message: "Erro ao buscar estabelecimentos com serviços.",
-				error: error.message,
+				message: "Erro ao buscar estabelecimentos.",
+				valid: false
 			});
 		} finally {
 			client.release();
@@ -286,7 +287,7 @@ class StoreController {
                            GROUP BY q.id
                            ORDER BY COUNT(rqc.userId) ASC
                            LIMIT 1
-                       ) AS smallest_queue
+                       ) AS minorQueue
                 FROM store
                 LEFT JOIN service ON store.id = service.storeId
                 WHERE store.name ILIKE $1

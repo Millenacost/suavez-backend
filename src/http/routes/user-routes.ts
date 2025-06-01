@@ -5,7 +5,7 @@ import { userSchema } from '../../models/user.model';
 export async function userRoutes(fastify: FastifyInstance) {
     const userController = new UserController();
 
-    fastify.post('/user/register', { schema: userSchema }, async (req: any, res: any) => {
+    fastify.post('/user', { schema: userSchema }, async (req: any, res: any) => {
         return userController.register(req, res);
     });
 

@@ -4,7 +4,6 @@ import fastifyJwt from "@fastify/jwt";
 import fastifyPostgres from "@fastify/postgres";
 import cors from "@fastify/cors";
 import { routes } from "./routes/routes";
-import { LoginController } from "../controllers/LoginController";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -17,6 +16,8 @@ app.register(fastifyJwt, {
 
 // CORS
 app.register(cors, { origin: "*", credentials: true });
+
+app.register(routes, { prefix: "/api" });
 
 // fastify.register(fastifyBcrypt);
 
@@ -31,7 +32,7 @@ app.register(fastifyPostgres, {
 	},
 });
 
-//rodar localmente
+// rodar localmente
 // app.register(fastifyPostgres, {
 //     connectionString: process.env.CONNECTION_STRING,
 //     ssl: {
@@ -41,10 +42,6 @@ app.register(fastifyPostgres, {
 
 app.get("/", async (req: any, res: any) => {
 	return res.send("Fastify on Vercel");
-});
-
-app.post("/login", async (req: any, res: any) => {
-	return new LoginController().handle(req, res);
 });
 
 app.register(routes);
