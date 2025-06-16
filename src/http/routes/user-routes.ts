@@ -13,7 +13,7 @@ export async function userRoutes(fastify: FastifyInstance) {
         return userController.delete(req, res);
     });
 
-    fastify.put('/user/update', async (req: any, res: any) => {
+    fastify.put('/user', async (req: any, res: any) => {
         return userController.update(req, res);
     });
 

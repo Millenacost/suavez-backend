@@ -3,8 +3,10 @@ import fastifyJwt from "@fastify/jwt";
 // import fastifyBcrypt from 'fastify-bcrypt';
 import fastifyPostgres from "@fastify/postgres";
 import cors from "@fastify/cors";
-import { routes } from "./routes/routes";
+import routes from "./routes/routes";
 import dotenv from "dotenv";
+import multipart from '@fastify/multipart'
+
 
 dotenv.config();
 export const app = fastify();
@@ -17,7 +19,11 @@ app.register(fastifyJwt, {
 // CORS
 app.register(cors, { origin: "*", credentials: true });
 
+app.register(multipart);
+
 app.register(routes, { prefix: "/api" });
+
+app.register(routes);
 
 // fastify.register(fastifyBcrypt);
 
@@ -40,11 +46,11 @@ app.register(fastifyPostgres, {
 //     }
 // })
 
-app.get("/", async (req: any, res: any) => {
-	return res.send("Fastify on Vercel");
-});
+// app.get("/", async (req: any, res: any) => {
+// 	console.log("Rota raiz acessada");
+// 	return res.send("Fastify on Vercel");
+// });
 
-app.register(routes);
 
 // Middleware de autenticação
 const authenticateToken = async (request: any, reply: any) => {

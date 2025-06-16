@@ -8,8 +8,9 @@ import { storeRoutes } from "./store-routes";
 import { relStoreEmployeeRoutes } from "./rel-store-employee-routes";
 import { userRoutes } from "./user-routes";
 import { loginRoutes } from "./login-routes";
+import { blobRoutes } from "./blob-routes";
 
-export async function routes(fastify: FastifyInstance, options: FastifyPluginOptions) {
+export  default async function routes(fastify: FastifyInstance) {
     fastify.register(productRoutes);
     fastify.register(queueRoutes);
     fastify.register(relQueueCustomerRoutes);
@@ -19,4 +20,11 @@ export async function routes(fastify: FastifyInstance, options: FastifyPluginOpt
     fastify.register(relStoreEmployeeRoutes);
     fastify.register(userRoutes);
     fastify.register(loginRoutes);
+    fastify.register(blobRoutes);
+    fastify.get("/", async (req: any, res: any) => {
+        console.log("Rota raiz acessada");
+        return res.send("Fastify on Vercel");
+    });
+
+
 }
